@@ -5,6 +5,7 @@ from django.template import RequestContext
 from django.apps import apps
 import hmac, base64, hashlib, binascii, os
 import shopify
+import os
 
 def _new_session(shop_url):
     api_version = apps.get_app_config('shopify_app').SHOPIFY_API_VERSION
@@ -14,26 +15,38 @@ def _new_session(shop_url):
 def login(request):
     # If the ${shop}.myshopify.com address is already provided in the URL,
     # just skip to authenticate
+    print(request.GET)
+    print(request.POST)
     if request.GET.get('shop'):
         return authenticate(request)
     return render(request, 'shopify_app/login.html', {})
 
 def authenticate(request):
     shop_url = request.GET.get('shop', request.POST.get('shop')).strip()
+    print('test0',shop_url)
+    # print(request.GET)
+    # print('test1',request.POST)
     if not shop_url:
         messages.error(request, "A shop param is required")
         return redirect(reverse(login))
     scope = apps.get_app_config('shopify_app').SHOPIFY_API_SCOPE
-    redirect_uri = request.build_absolute_uri(reverse(finalize))
+    print('test2',scope)
+    redirect_uri = os.environ.get('HOST_URL')
+    print('testtt',reverse(finalize))
+    print('test3',redirect_uri)
     state = binascii.b2a_hex(os.urandom(15)).decode("utf-8")
+    print(state)
     request.session['shopify_oauth_state_param'] = state
     permission_url = _new_session(shop_url).create_permission_url(scope, redirect_uri, state)
+    print(permission_url)
     return redirect(permission_url)
 
 def finalize(request):
     api_secret = apps.get_app_config('shopify_app').SHOPIFY_API_SECRET
     params = request.GET.dict()
-
+    print('request',request)
+    print(type(request.session['shopify_oauth_state_param']),request.session['shopify_oauth_state_param'])
+    print(type(params['state']),params['state'])
     if request.session['shopify_oauth_state_param'] != params['state']:
         messages.error(request, 'Anti-forgery state token does not match the initial request.')
         return redirect(reverse(login))

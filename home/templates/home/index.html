@@ -1,45 +1,45 @@
 {% extends "base.html" %}
 {% block content %}
-  <div id="orders">
-    <h2>Your recent orders</h2>
-    {% if orders %}
-      <ul>
-      {% for order in orders %}
-        <li>
-          <div class="order box">
-            <div class="wrapper">
-              <strong><a href="https://{{ current_shop.domain }}/admin/orders/{{ order.id }}">{{ order.name }}</a></strong>
-              <span class="price">{{ order.total_price }} {{ order.currency }}</span>
-              <span class="highlight">{{ order.financial_status }}</span>
-              by <span class="note">{{ order.billing_address.name }}</span>
-            </div>
-          </div>
-        </li>
-      {% endfor %}
-      </ul>
-    {% else %}
-      <em class="note">There are no orders in your store.</em>
-    {% endif %}
+<div>
+  <h2 style="line-height: 1.3; padding: 2rem;">FarziPromo Bulk Coupon allows you to make large amounts of unlimited discount codes into Shopify discounts to save time and effort. You can have unique codes automatically generated or provide specific ones yourself. Click on the below link to proceed further. </h2>
+  <div class="description" style="padding: 0 2rem;">
+    <h1>HOW IT WORKS :</h1>
+    <ul style="font-size: 1rem; line-height: 1.5;">
+      <li>Click on Generate Bulk Coupon.</li>
+      <li>Enter your credentials to log in to the Bulk Coupon Generator page.</li>
+      <li>Create a discount coupon on shopify, to get the rule ID from it's URL.</li>
+      <li>Now paste your rule ID, fill the 'Coupon Prefix' and click on Create Sales Rule.</li>
+      <li>Go to 'Generate Series' section from the above navbar.</li>
+      <li>Now Select the Prefix which you had created and enter the number of coupons which you want to generate, length of coupon, email id where the created coupons will be mailed.</li>
+    </ul>
+    <h1>BENEFITS :</h1>
+    <ul style="font-size: 1rem; line-height: 1.5;">
+      <li>Unlimited number of coupons on Shopify.</li>
+      <li>Used for Google pay scratch cards, phone pay rewards and many more...</li>
+    </ul>
   </div>
-
-  <h2>Some of your products</h2>
-  {% for product in products %}
-    <div class="product box">
-      <div class="wrapper">
-        {% if product.images %}
-          <img src="{{ product.images.0.small }}" />
-        {% endif %}
-
-        <h4><a href="https://{{ current_shop.domain }}/admin/products/{{ product.id }}">{{ product.title }}</a></h4>
-
-        <p class="price">{{ product.price_range }} {{ current_shop.currency }}</p>
-        <p style="margin-bottom: 0">{{ product.product_type }} <span class="note">type</span></p>
-        <p style="margin: 0">{{ product.vendor }} <span class="note">vendor</span></p>
-
-        <div style="clear:left"></div>
-      </div>
-    </div>
-  {% empty %}
-    <em class="note">There are no products in your store.</em>
-  {% endfor %}
+  <button class="generate_coupon_btn">Generate Bulk Coupon</button>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+  $('.generate_coupon_btn').click(function(){
+    var output ;
+    $.ajax({
+        url: "https://farzipromo-stage.farziengineer.co/shopify/success",
+        type: 'GET',
+        success: function(data, textStatus, xhr) {
+          if(xhr.status == 200) {
+            window.location.href = "https://farzipromo-stage.farziengineer.co/shopify/bulk-coupon";
+          }
+          else {
+            window.location.href = "/contact-us";
+          }
+        },
+        error: function (data, textStatus, xhr) {
+          window.location.href = "/contact-us"
+        }
+    });
+    
+  })
+</script>
 {% endblock %}

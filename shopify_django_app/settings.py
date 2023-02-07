@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 from shopify_app import *
+from dotenv import load_dotenv
+# import environ
+load_dotenv()
+# env = environ.Env()
+# environ.Env.read_env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,7 +31,9 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '*'
+]
 
 # Application definition
 
@@ -39,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'shopify_app.apps.ShopifyAppConfig',
     'home.apps.HomeConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -122,3 +130,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# Bottom of settings.py 
+# Twilio SendGrid
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'apikey' # Name for all the SenGrid accounts
+EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
+
+# The email you'll be sending emails from
+DEFAULT_FROM_EMAIL = os.environ.get('FROM_EMAIL')
+LOGIN_REDIRECT_URL = 'success'
+
+
+# CSRF_TRUSTED_ORIGINS = ['https://*']
+CSRF_TRUSTED_ORIGINS = ['https://5b65-183-82-160-185.in.ngrok.io']

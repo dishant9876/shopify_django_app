@@ -8,6 +8,10 @@ verify_ssl = true
 [packages]
 django = ">=3.0.2"
 ShopifyAPI = ">=5.1.2"
+requests = "*"
+django-environ = "*"
+python-dotenv = "*"
+djangorestframework = "*"
 
 [requires]
 python_version = "3.8"
